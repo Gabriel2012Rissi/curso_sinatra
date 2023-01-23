@@ -3,17 +3,18 @@ module Api
     class CarsController < ApplicationController
       namespace '/api/v1' do
         get '/cars' do
-          # env['warden'].authenticate!(:access_token)
-
           @cars = Car.all
+          # Get cars by brand
           @cars = @cars.where(brand: params[:brand]) if params[:brand]
+          # Get cars by model
+          @cars = @cars.where(model: params[:model]) if params[:model]
+          # Get cars by year
+          @cars = @cars.where(year: params[:year]) if params[:year]
           
           JSONAPI::Serializer.serialize(@cars, is_collection: true, namespace: Api::V1).to_json
         end
 
         get '/cars/:id' do
-          # env['warden'].authenticate!(:access_token)
-
           @car = Car.find(params[:id])
 
           JSONAPI::Serializer.serialize(@car, namespace: Api::V1).to_json
