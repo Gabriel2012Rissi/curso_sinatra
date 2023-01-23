@@ -3,8 +3,6 @@ API RESTful com Sinatra para Workshop Claretiano Nov/2017
 
 ## Como usar?
 
-Este repositório foi construído na ordem Pull Requests enviados. Você pode observar o que cada pull request modificou, dentro do github.
-
 #### Instalando
 
 1. Para usar o [Vagrant](https://www.vagrantup.com) é necessário primeiramente efetuar a instalação da ferramenta.
@@ -38,7 +36,6 @@ $ vagrant ssh
 Para facilitar, algumas tarefas já foram automatizadas:
 
 ```console
-$ make install_dependencies
 $ make build
 ```
 
