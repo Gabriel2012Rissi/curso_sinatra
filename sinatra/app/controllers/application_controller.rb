@@ -5,14 +5,6 @@ class ApplicationController < Sinatra::Base
   before do 
     content_type 'application/vnd.api+json'
   end
-  
-  helpers do
-    def json_params
-      JSON.parse(request.body.read)
-    rescue => e
-      halt 400, { message: 'Invalid JSON' }.to_json
-    end
-  end
 
   # Configure Warden
   use Warden::Manager do |config|
@@ -51,8 +43,8 @@ class ApplicationController < Sinatra::Base
 
     def authenticate!
       access_token = request.env['HTTP_AUTHORIZATION'].split(' ').last
-      access_granted = User.find_by(token: access_token) ? true : false
-      access_granted ? success!(access_granted) : fail!('Could not log in') 
+      access_granted = User.find_by(username: Helpers::TokenHelper.decode_token(access_token)) ? true : false
+      access_granted ? success!(access_granted) : fail!('Could not log in')
     end
   end
 end

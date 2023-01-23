@@ -1,5 +1,8 @@
 class User < ActiveRecord::Base
   before_save :generate_token
+
+  has_secure_password
+  has_secure_token
   
   # Validations
   validates :name, presence: true
@@ -13,17 +16,9 @@ class User < ActiveRecord::Base
   validates :username, presence: true, uniqueness: true
   validates :password, presence: true, length: { minimum: 8 }, confirmation: true
   validates :password_confirmation, presence: true
-
-  # Prevent updates to these attributes
-  attr_readonly :name, :email
-
-  # Bcrypt password
-  has_secure_password
-
-  private
-
+  
   # Callback to generate a new token
   def generate_token
-    self.token = SecureRandom.hex
+    self.token = Libraries::JsonWebToken.encode(self.username, 5.hours.from_now)
   end
 end

@@ -23,7 +23,9 @@ module Api
         post '/cars' do
           env['warden'].authenticate!(:access_token)
 
-          @car = Car.new(json_params)
+          params = Helpers::JsonHelper.json_params(request.body.read)
+
+          @car = Car.new(params)
           
           if @car.save
             JSONAPI::Serializer.serialize(@car, namespace: Api::V1).to_json
@@ -36,8 +38,10 @@ module Api
           env['warden'].authenticate!(:access_token)
 
           @car = Car.find(params[:id])
+
+          params = Helpers::JsonHelper.json_params(request.body.read)
           
-          if @car.update(json_params)
+          if @car.update(params)
             JSONAPI::Serializer.serialize(@car, namespace: Api::V1).to_json
           else
             status 422, { message: @car.errors.full_messages }.to_json

@@ -1,13 +1,20 @@
 require 'bundler'
 require 'bundler/setup'
 require 'jsonapi-serializers'
+require 'jwt'
 require 'require_all'
 require 'sinatra'
 require 'sinatra/base'
 require 'sinatra/namespace'
 require 'warden'
 
-Bundler.require :default, ENV["SINATRA_ENV"].to_sym
+# Default environment configuration for the application.
+Bundler.require :default, ENV["SINATRA_ENV"].to_sym || 'development'
+
+# API Key for JWT.
+# Note: This API_KEY is for development purposes only. Set the API_KEY environment 
+# variable in production.
+API_KEY = ENV['API_KEY'] || 'ZmvhBBpb4RlbyblpKoj9F716CoONTOtr'
 
 # Configure project structure.
 # Root path.

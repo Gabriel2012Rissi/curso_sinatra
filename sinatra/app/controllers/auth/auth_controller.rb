@@ -3,9 +3,10 @@ module Api
     class AuthController < ApplicationController
       namespace '/api/auth' do
         post '/login' do
-          params = json_params
+          params = Helpers::JsonHelper.json_params(request.body.read)
           @user = User.find_by(email: params['email'])
           if @user.authenticate(params['password'])
+            @user.generate_token
             status 200
             {
               data: {
@@ -31,7 +32,7 @@ module Api
         end
 
         post '/signup' do
-          params = json_params
+          params = Helpers::JsonHelper.json_params(request.body.read)
           @user = User.new(params)
           if @user.save
             status 201
